@@ -17,6 +17,7 @@ Add `service_auth` in INSTALLED_APPS
     )
 
 Add
+
     ENTITY_BASE_URL_MAP = {
         ...
     'auth':'url-for-authentication-service.com',
