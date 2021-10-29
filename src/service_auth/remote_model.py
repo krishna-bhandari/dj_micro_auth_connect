@@ -4,13 +4,13 @@ import json
 from django.conf import settings 
 
 class RemoteModel:
-    def __init__(self, request, entity, endpoint,token=None):
+    def __init__(self, request, entity, endpoint,token = None,tenant = None):
         self.request = request
         self.entity = entity
         self.endpoint = endpoint
         self.override_headers = {'Authorization':token}
-
-        self.url = f'{settings.ENTITY_BASE_URL_MAP.get(entity)}/{endpoint}'
+        self.tenant = str(tenant+'.') if tenant else ''
+        self.url = f'http://{self.tenant}{settings.ENTITY_BASE_URL_MAP.get(entity)}/{settings.ENTITY_URL_PATH.get(endpoint)}'
 
     def _headers(self, override_headers=None):
         base_headers = {'content-type': 'application/json'}

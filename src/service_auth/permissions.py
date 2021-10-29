@@ -22,7 +22,7 @@ class IsAuthenticated(permissions.BasePermission):
             return False
         if request.session.has_key("user") and request.session["user"] == token:
             return True
-        verify = bool(RemoteModel(request,'auth','api/auth/token/verify',token).verify_token(token))
+        verify = bool(RemoteModel(request,'auth','verify_token',token).verify_token(token))
         if verify:
             request.session["user"] = token
             return True
