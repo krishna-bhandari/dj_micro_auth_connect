@@ -2,7 +2,8 @@
 service_auth
 =====
 
-customers is a Django app which is used to serve django tenant details. It is used to create tenants, schemas and doamin urls for respective tenants. :fire:
+A small package to connect microservices and authenticate user. It uses RemoteModel to make http requests with multiple services.
+Also used to verify tokens to authenticate users.
 
 Quick start
 -----------
