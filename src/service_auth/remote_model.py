@@ -9,8 +9,8 @@ class RemoteModel:
         self.entity = entity
         self.endpoint = endpoint
         self.override_headers = {'Authorization':token}
-        self.tenant = str(tenant+'.') if tenant else ''
-        self.url = f'http://{self.tenant}{settings.ENTITY_BASE_URL_MAP.get(entity)}/{settings.ENTITY_URL_PATH.get(endpoint)}'
+        self.tenant = str(tenant+'.') if request.tenant else ''
+        self.url = f'{settings.PROTOCOL}{self.tenant}{settings.ENTITY_BASE_URL_MAP.get(entity)}/{settings.ENTITY_URL_PATH.get(endpoint)}'
 
     def _headers(self, override_headers=None):
         base_headers = {'content-type': 'application/json'}
@@ -35,10 +35,19 @@ class RemoteModel:
         url,json.dumps(data),
         headers=self._headers(),
         cookies=self._cookies())
-
-    def get(self, entity_id):
+    
+    def get_permission(self,token):
+        url = f'{self.url}/'
+        data = {'token':token.split(' ')[1]}
         return requests.get(
-        f'{self.url}/{entity_id}',
+        url,
+        headers=self._headers(),
+        cookies=self._cookies())
+
+    def get_detail(self, entity_id):
+        url = f'{self.url}/{entity_id}'
+        return requests.get(
+        url,
         headers=self._headers(),
         cookies=self._cookies())
     
@@ -50,21 +59,24 @@ class RemoteModel:
         cookies=self._cookies())
 
     def delete(self, entity_id):
-        return requests.delete(
-        f'{self.url}/{entity_id}',
-        headers=self._headers(),
-        cookies=self._cookies())
+        url = f'{self.url}/{entity_id}/'
 
-    def create(self, entity_id, entity_data):
-        return requests.put(
-        f'{self.url}/',
-        data=json.dumps(entity_data),
+        return requests.delete(
+        url,
         headers=self._headers(),
         cookies=self._cookies())
 
     def update(self, entity_id, entity_data):
-        return requests.post(
-        f'{self.url}/{entity_id}',
+        url = f'{self.url}/{entity_id}/'
+        return requests.put(
+        url,
+        data=json.dumps(entity_data),
+        headers=self._headers(),
+        cookies=self._cookies())
+
+    def create(self, entity_data):
+        url = f'{self.url}/'
+        return requests.post(url,
         data=json.dumps(entity_data),
         headers=self._headers(),
         cookies=self._cookies())
