@@ -21,6 +21,7 @@ Add
     ENTITY_BASE_URL_MAP = {
         ...
     'auth':'url-for-authentication-service.com',
+    
     }
 
     ENTITY_URL_PATH = {
@@ -28,4 +29,6 @@ Add
     'verify_token':'api/path/for/endpoint',
     }
 
+
 * Note: Above mentioned keys must be same to get it work.
+

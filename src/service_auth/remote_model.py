@@ -9,7 +9,8 @@ class RemoteModel:
         self.entity = entity
         self.endpoint = endpoint
         self.override_headers = {'Authorization':token}
-        self.tenant = str(tenant+'.') if request.tenant else ''
+      
+        self.tenant = str(str(request.tenant)+'.') if request.tenant else ''
         self.url = f'{settings.PROTOCOL}{self.tenant}{settings.ENTITY_BASE_URL_MAP.get(entity)}/{settings.ENTITY_URL_PATH.get(endpoint)}'
 
     def _headers(self, override_headers=None):
@@ -30,17 +31,20 @@ class RemoteModel:
 
     def verify_token(self,token):
         url = f'{self.url}/'
-        data = {'token':token.split(' ')[1]}
+        try:
+            data = {'token':token.split(' ')[1]}
+        except:
+            data = {'token':token}
         return requests.post(
         url,json.dumps(data),
         headers=self._headers(),
         cookies=self._cookies())
     
-    def get_permission(self,token):
-        url = f'{self.url}/'
-        data = {'token':token.split(' ')[1]}
+    def get_permission(self,ut,perm = None):
+        url = f'{self.url}/{ut}/'
+        data = {'permission':perm}
         return requests.get(
-        url,
+        url,data,
         headers=self._headers(),
         cookies=self._cookies())
 
